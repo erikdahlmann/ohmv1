@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Das Ohmsche Gesetz · Physik Klasse 9</title>
+<style>
+  :root{
+    --bg:#f4f1ea;
+    --surface:#ffffff;
+    --ink:#22201c;
+    --muted:#6b665d;
+    --line:#e3ddd0;
+    --accent:#3a5a78;
+    --accent-soft:#e8eef4;
+
+    /* Farben der drei Größen */
+    --c-U:#2f6fb0;   /* Spannung */
+    --c-I:#2e8b57;   /* Stromstärke */
+    --c-R:#c9821a;   /* Widerstand */
+
+    --ok:#2e8b57;
+    --bad:#c0392b;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{line-height:1.25;font-weight:600}
+  h2{font-size:1.7rem;margin:0 0 .2em}
+  h3{font-size:1.2rem;margin:1.4em 0 .4em}
+  p{margin:.6em 0}
+  a{color:var(--accent)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px}
+
+  /* Navigation */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(244,241,234,.92);
+    backdrop-filter:saturate(140%) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding-top:10px;padding-bottom:10px}
+  nav .brand{font-weight:700;margin-right:auto;font-size:.98rem;letter-spacing:.02em}
+  nav a{
+    font-family:system-ui,sans-serif;font-size:.82rem;text-decoration:none;
+    color:var(--muted);padding:6px 11px;border-radius:999px;transition:.15s;
+  }
+  nav a:hover{background:var(--accent-soft);color:var(--accent)}
+
+  /* Hero */
+  header.hero{padding:54px 0 34px;text-align:center}
+  header.hero .kicker{font-family:system-ui,sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;color:var(--muted)}
+  header.hero h1{font-size:2.6rem;margin:.25em 0 .15em}
+  header.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:620px;margin:.4em auto 0}
+
+  section{padding:30px 0}
+  .card{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);margin:18px 0;
+  }
+  .section-tag{
+    display:inline-block;font-family:system-ui,sans-serif;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.12em;padding:4px 11px;border-radius:999px;
+    background:var(--accent-soft);color:var(--accent);margin-bottom:14px;
+  }
+  .hint{font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted);background:#faf8f3;
+    border-left:3px solid var(--line);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+  .warnbox{font-family:system-ui,sans-serif;font-size:.92rem;background:#fbf3ec;
+    border-left:3px solid var(--c-R);padding:11px 15px;border-radius:0 8px 8px 0;margin:14px 0}
+
+  /* Größen-Karten */
+  .elements{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px}
+  .el{border:1px solid var(--line);border-radius:12px;padding:15px 16px;background:var(--surface);border-top:4px solid var(--bar)}
+  .el .sym{font-weight:700;font-size:1.7rem;color:var(--bar)}
+  .el .name{font-weight:700;font-size:1.05rem;margin-top:2px}
+  .el .unit{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted)}
+  .el .def{font-size:.95rem;margin:.4em 0 0}
+  .el.U{--bar:var(--c-U)} .el.I{--bar:var(--c-I)} .el.R{--bar:var(--c-R)}
+
+  /* farbige Symbole im Fließtext */
+  .vU{color:var(--c-U);font-weight:700}
+  .vI{color:var(--c-I);font-weight:700}
+  .vR{color:var(--c-R);font-weight:700}
+
+  /* Formeln */
+  .formula{font-family:"Iowan Old Style",Georgia,serif;font-size:1.7rem;text-align:center;
+    background:#faf8f3;border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0}
+  .formula .vU,.formula .vI,.formula .vR{font-size:1.15em}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+  @media(max-width:680px){.two{grid-template-columns:1fr}}
+
+  /* Diagramme */
+  .diagram{width:100%;height:auto;display:block;margin:6px 0 2px}
+  .diagram text{font-family:system-ui,sans-serif}
+  figcaption{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted);text-align:center;margin-top:6px}
+
+  /* Kennlinie-Regler */
+  input[type=range]{width:100%;accent-color:var(--c-R);margin:6px 0}
+
+  /* Aufgaben */
+  .task-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .task-num{font-family:system-ui,sans-serif;font-weight:800;font-size:.8rem;color:#fff;background:var(--accent);
+    width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
+  .level{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+    padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .levelhead{font-family:system-ui,sans-serif;font-size:.78rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--accent);margin:26px 0 2px}
+  .ctx{font-size:1.06rem}
+  .given{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .tag{font-family:system-ui,sans-serif;font-size:.86rem;background:#faf8f3;border:1px solid var(--line);
+    border-radius:8px;padding:3px 10px;color:var(--muted)}
+  .ask{font-weight:600;margin:8px 0 4px}
+  .answer-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;font-family:system-ui,sans-serif}
+  .answer-row .lhs{font-weight:700;font-size:1.15rem}
+  .answer-row input{width:130px;font-family:system-ui,sans-serif;font-size:1rem;text-align:right;
+    padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+  .answer-row input:focus{outline:2px solid var(--accent)}
+  .answer-row .unit{font-size:1.02rem;color:var(--muted);min-width:26px}
+  .answer-row input.correct{border-color:var(--ok)}
+  .answer-row input.incorrect{border-color:var(--bad)}
+  button.act{font-family:system-ui,sans-serif;font-size:.9rem;font-weight:600;padding:9px 18px;border-radius:10px;
+    border:1.5px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:.15s}
+  button.act:hover{filter:brightness(1.08)}
+  button.ghost{background:#fff;color:var(--accent)}
+  .feedback{margin-top:12px;font-family:system-ui,sans-serif;font-size:.95rem;padding:11px 15px;border-radius:10px;display:none}
+  .feedback.show{display:block}
+  .feedback.good{background:#eef8f1;color:#1f6e43;border:1px solid #b9e0c8}
+  .feedback.mid{background:#fff6e9;color:#8a5a12;border:1px solid #f0d9b0}
+  .solution{display:none;margin-top:14px;border-left:3px solid var(--accent);padding:6px 0 6px 16px}
+  .solution.show{display:block}
+  .solution h4{font-family:system-ui,sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 6px}
+  .solution .step{font-size:1.04rem;margin:3px 0}
+
+  footer{padding:40px 0;text-align:center;color:var(--muted);font-family:system-ui,sans-serif;font-size:.85rem}
+  .progress-wrap{position:fixed;left:0;top:0;height:3px;width:100%;background:transparent;z-index:60}
+  #progress{height:100%;width:0;background:var(--accent);transition:width .1s}
+  @media(max-width:540px){header.hero h1{font-size:2rem}}
+</style>
+</head>
+<body>
+<div class="progress-wrap"><div id="progress"></div></div>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">⚡ Ohmsches Gesetz</span>
+    <a href="#grundlagen">Grundlagen</a>
+    <a href="#umstellen">Umstellen</a>
+    <a href="#kennlinie">Kennlinie</a>
+    <a href="#uebungen">Übungen</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Physik · Klasse 9</div>
+    <h1>Das Ohmsche Gesetz</h1>
+    <p class="lead">Verstehen, üben, rechnen.</p>
+  </div>
+</header>
+
+<!-- ============ 1 · GRUNDLAGEN ============ -->
+<section id="grundlagen">
+  <div class="wrap">
+    <span class="section-tag">1 · Grundlagen</span>
+    <div class="card">
+      <h2>Das Ohmsche Gesetz &amp; der Widerstand</h2>
+      <p>In jedem Stromkreis hängen drei Größen zusammen: die <span class="vU">Spannung&nbsp;U</span>,
+         die <span class="vI">Stromstärke&nbsp;I</span> und der <span class="vR">Widerstand&nbsp;R</span>.</p>
+
+      <div class="elements">
+        <div class="el U"><div class="sym">U</div><div class="name">Spannung</div><div class="unit">Einheit: Volt (V)</div>
+          <div class="def">Der „Antrieb", der den Strom durch den Leiter treibt.</div></div>
+        <div class="el I"><div class="sym">I</div><div class="name">Stromstärke</div><div class="unit">Einheit: Ampere (A)</div>
+          <div class="def">Gibt an, wie viel Ladung pro Zeit durch den Leiter fließt.</div></div>
+        <div class="el R"><div class="sym">R</div><div class="name">Widerstand</div><div class="unit">Einheit: Ohm (Ω)</div>
+          <div class="def">Die „Bremse", die den Stromfluss begrenzt.</div></div>
+      </div>
+
+      <p style="margin-top:18px">Der deutsche Physiker <strong>Georg Simon Ohm</strong> (1789–1854) fand heraus: Bei vielen
+         Leitern – besonders Metallen bei gleichbleibender Temperatur – ist die Spannung <span class="vU">U</span>
+         über dem Leiter <strong>proportional</strong> zur Stromstärke <span class="vI">I</span>. Verdoppelt man die
+         Spannung, verdoppelt sich auch der Strom. Der Quotient <span class="vU">U</span>/<span class="vI">I</span>
+         bleibt dabei konstant – diesen Wert nennt man den <span class="vR">elektrischen Widerstand R</span>.</p>
+
+      <div class="formula"><span class="vU">U</span> = <span class="vR">R</span> · <span class="vI">I</span></div>
+
+      <p><strong>Anschaulich:</strong> Der Widerstand <span class="vR">R</span> gibt an, wie stark ein Bauteil den
+         Stromfluss „bremst". Je größer <span class="vR">R</span>, desto weniger Strom fließt bei gleicher Spannung.
+         Die Einheit ist das <strong>Ohm</strong>: 1&nbsp;Ω&nbsp;=&nbsp;1&nbsp;V&nbsp;/&nbsp;1&nbsp;A.</p>
+
+      <div class="two" style="margin-top:18px">
+        <div>
+          <h3>Ein einfacher Stromkreis</h3>
+          <p style="font-family:system-ui,sans-serif;font-size:.95rem;color:var(--muted)">Eine Spannungsquelle treibt
+             den Strom durch den Widerstand. Ein <strong>Amperemeter (A)</strong> misst die Stromstärke, ein
+             <strong>Voltmeter (V)</strong> die Spannung über dem Widerstand.</p>
+        </div>
+        <figure style="margin:0">
+          <svg class="diagram" viewBox="0 0 360 240" role="img" aria-label="Schaltbild eines einfachen Stromkreises">
+            <g stroke="#6b665d" stroke-width="2.5" fill="none" stroke-linecap="round">
+              <path d="M60 60 H300"/><path d="M60 60 V180"/><path d="M300 60 V100"/>
+              <path d="M300 140 V180"/><path d="M60 180 H160"/><path d="M200 180 H300"/>
+            </g>
+            <g stroke="#6b665d" stroke-width="2.5">
+              <line x1="170" y1="166" x2="170" y2="194"/><line x1="182" y1="174" x2="182" y2="186"/>
+            </g>
+            <text x="150" y="214" fill="#6b665d" font-size="12">U₀ · Quelle</text>
+            <rect x="285" y="100" width="30" height="40" rx="4" fill="#fff" stroke="var(--c-R)" stroke-width="2.5"/>
+            <text x="322" y="124" fill="var(--c-R)" font-size="15" font-weight="700">R</text>
+            <circle cx="180" cy="60" r="15" fill="#fff" stroke="var(--c-I)" stroke-width="2.5"/>
+            <text x="180" y="65" fill="var(--c-I)" font-size="14" font-weight="700" text-anchor="middle">A</text>
+            <circle cx="250" cy="120" r="15" fill="#fff" stroke="var(--c-U)" stroke-width="2.5"/>
+            <text x="250" y="125" fill="var(--c-U)" font-size="14" font-weight="700" text-anchor="middle">V</text>
+            <g stroke="var(--c-U)" stroke-width="1.8" fill="none" stroke-dasharray="4 3">
+              <path d="M250 105 V92 H300"/><path d="M250 135 V150 H300"/>
+            </g>
+            <polygon points="118,52 132,60 118,68" fill="var(--c-I)"/>
+            <text x="106" y="46" fill="var(--c-I)" font-size="13" font-weight="700">I</text>
+          </svg>
+          <figcaption>Stromkreis mit Quelle, Widerstand R, Amperemeter (A) und Voltmeter (V).</figcaption>
+        </figure>
+      </div>
+
+      <div class="warnbox"><strong>Achtung – nicht jeder Leiter ist „ohmsch":</strong> Eine Glühlampe wird bei mehr
+         Strom heißer, dadurch ändert sich ihr Widerstand. Bei ihr ist <span class="vU">U</span>/<span class="vI">I</span>
+         <u>nicht</u> konstant – sie folgt dem Ohmschen Gesetz nicht. „Ohmsche Widerstände" sind z.&nbsp;B.
+         Konstantandrähte oder technische Widerstände bei konstanter Temperatur.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · UMSTELLEN ============ -->
+<section id="umstellen">
+  <div class="wrap">
+    <span class="section-tag">2 · Die Formel umstellen</span>
+    <div class="card">
+      <h2>Das U-I-R-Dreieck</h2>
+      <p>Je nachdem, welche Größe gesucht ist, stellt man <span class="vU">U</span> = <span class="vR">R</span> · <span class="vI">I</span>
+         um. Das Formeldreieck hilft: Decke die gesuchte Größe ab – was übrig bleibt, ist die Rechnung.</p>
+      <div class="two">
+        <figure style="margin:0">
+          <svg class="diagram" viewBox="0 0 300 230" role="img" aria-label="Formeldreieck U R I" style="max-width:280px;margin:0 auto">
+            <polygon points="150,18 282,212 18,212" fill="#faf8f3" stroke="var(--line)" stroke-width="2"/>
+            <line x1="60" y1="130" x2="240" y2="130" stroke="var(--line)" stroke-width="2"/>
+            <line x1="150" y1="130" x2="150" y2="212" stroke="var(--line)" stroke-width="2"/>
+            <text x="150" y="102" fill="var(--c-U)" font-size="44" font-weight="700" text-anchor="middle" font-family="Georgia,serif">U</text>
+            <text x="108" y="186" fill="var(--c-R)" font-size="40" font-weight="700" text-anchor="middle" font-family="Georgia,serif">R</text>
+            <text x="196" y="186" fill="var(--c-I)" font-size="40" font-weight="700" text-anchor="middle" font-family="Georgia,serif">I</text>
+          </svg>
+          <figcaption>Oben U, unten R und I.</figcaption>
+        </figure>
+        <div>
+          <div class="formula" style="font-size:1.35rem"><span class="vU">U</span> = <span class="vR">R</span> · <span class="vI">I</span></div>
+          <div class="formula" style="font-size:1.35rem"><span class="vR">R</span> = <span class="vU">U</span> / <span class="vI">I</span></div>
+          <div class="formula" style="font-size:1.35rem"><span class="vI">I</span> = <span class="vU">U</span> / <span class="vR">R</span></div>
+        </div>
+      </div>
+      <div class="hint">💡 <strong>Einheiten umrechnen – oft nötig!</strong><br>
+        1&nbsp;mA = 0,001&nbsp;A · 1&nbsp;A = 1000&nbsp;mA &nbsp;|&nbsp; 1&nbsp;kΩ = 1000&nbsp;Ω &nbsp;|&nbsp; 1&nbsp;kV = 1000&nbsp;V.<br>
+        Vor dem Einsetzen immer in die Grundeinheiten V, A und Ω umrechnen!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · KENNLINIE ============ -->
+<section id="kennlinie">
+  <div class="wrap">
+    <span class="section-tag">3 · Die U-I-Kennlinie</span>
+    <div class="card">
+      <h2>Wenn U und I proportional sind</h2>
+      <p>Trägt man die Messwerte in ein Diagramm ein, ergibt sich bei einem <strong>ohmschen Widerstand</strong> eine
+         <strong>Ursprungsgerade</strong>: U ist proportional zu I. Bewege den Regler und beobachte, wie sich die
+         Gerade bei verschiedenen Widerständen ändert.</p>
+      <div class="two">
+        <figure style="margin:0">
+          <svg id="kennlinieSvg" class="diagram" viewBox="0 0 360 280" role="img" aria-label="U-I-Kennlinie">
+            <line x1="50" y1="240" x2="340" y2="240" stroke="#6b665d" stroke-width="2"/>
+            <line x1="50" y1="240" x2="50" y2="20" stroke="#6b665d" stroke-width="2"/>
+            <polygon points="340,240 332,236 332,244" fill="#6b665d"/>
+            <polygon points="50,20 46,28 54,28" fill="#6b665d"/>
+            <text x="326" y="262" fill="#6b665d" font-size="13">I in A</text>
+            <text x="14" y="30" fill="#6b665d" font-size="13">U in V</text>
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="108" y1="240" x2="108" y2="20"/><line x1="166" y1="240" x2="166" y2="20"/>
+              <line x1="224" y1="240" x2="224" y2="20"/><line x1="282" y1="240" x2="282" y2="20"/>
+              <line x1="50" y1="196" x2="340" y2="196"/><line x1="50" y1="152" x2="340" y2="152"/>
+              <line x1="50" y1="108" x2="340" y2="108"/><line x1="50" y1="64" x2="340" y2="64"/>
+            </g>
+            <g fill="#6b665d" font-size="11">
+              <text x="103" y="256">1</text><text x="161" y="256">2</text><text x="219" y="256">3</text><text x="277" y="256">4</text>
+              <text x="34" y="200">2</text><text x="34" y="156">4</text><text x="34" y="112">6</text><text x="34" y="68">8</text>
+            </g>
+            <line id="kLine" x1="50" y1="240" x2="282" y2="64" stroke="var(--c-R)" stroke-width="3"/>
+            <circle id="kDot" cx="166" cy="152" r="5" fill="var(--c-R)"/>
+          </svg>
+          <figcaption>Ursprungsgerade eines ohmschen Widerstands.</figcaption>
+        </figure>
+        <div style="font-family:system-ui,sans-serif">
+          <p style="margin:.2em 0">Widerstand: <strong id="kVal" style="color:var(--c-R);font-size:1.2rem">2 Ω</strong></p>
+          <input id="kSlider" type="range" min="1" max="4" value="2" step="0.5">
+          <p style="font-size:.92rem;color:var(--muted)" id="kInfo">Beispielpunkt: bei I = 2 A liegt U = 4 V an → R = U/I = 2 Ω.</p>
+          <p style="font-size:.92rem;color:var(--muted)">Je steiler die Gerade im I-U-Diagramm, desto größer der Widerstand.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · ÜBUNGEN ============ -->
+<section id="uebungen">
+  <div class="wrap">
+    <span class="section-tag">4 · Übungen</span>
+    <p class="lead" style="font-size:1rem;color:var(--muted)">Die Aufgaben werden Schritt für Schritt schwerer – von
+       der einfachen Spannungsberechnung bis zum Umstellen der Formel mit Einheitenumrechnung. Gib dein Ergebnis ein
+       und klicke auf <strong>Prüfen</strong>; mit <strong>Lösung</strong> siehst du den Rechenweg.</p>
+    <div id="taskContainer"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Physik · Klasse 9 · Lerneinheit „Ohmsches Gesetz" · Alle Eingaben bleiben lokal in deinem Browser — es wird nichts gespeichert oder gesendet.
+  </div>
+</footer>
+
+<script>
+/* ---------- Lesefortschritt ---------- */
+const prog=document.getElementById("progress");
+addEventListener("scroll",()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight);prog.style.width=(p*100)+"%";});
+
+/* ---------- Aufgaben-Daten ---------- */
+const TASKS = [
+  {lvl:1, solve:'U', unit:'V', answer:3, tol:0.02,
+   ctx:"In einer Taschenlampe sitzt ein kleines Glühlämpchen mit dem Widerstand R = 6 Ω. Durch den Glühfaden fließt ein Strom von I = 0,5 A.",
+   ask:"Berechne die Spannung U, die an dem Lämpchen anliegt.",
+   given:{R:'6 Ω', I:'0,5 A'},
+   steps:["Gesucht: U → U = R · I","U = 6 Ω · 0,5 A","U = 3 V"]},
+  {lvl:1, solve:'U', unit:'V', answer:12, tol:0.02,
+   ctx:"Ein Modellauto-Motor hat den Widerstand R = 4 Ω. Es fließt ein Strom von I = 3 A.",
+   ask:"Berechne die anliegende Spannung U.",
+   given:{R:'4 Ω', I:'3 A'},
+   steps:["Gesucht: U → U = R · I","U = 4 Ω · 3 A","U = 12 V"]},
+  {lvl:1, solve:'U', unit:'V', answer:9, tol:0.02,
+   ctx:"Durch einen Heizdraht im Physikraum mit R = 18 Ω fließt ein Strom von I = 0,5 A.",
+   ask:"Welche Spannung U liegt über dem Heizdraht an?",
+   given:{R:'18 Ω', I:'0,5 A'},
+   steps:["Gesucht: U → U = R · I","U = 18 Ω · 0,5 A","U = 9 V"]},
+
+  {lvl:2, solve:'U', unit:'V', answer:4.4, tol:0.02,
+   ctx:"Eine rote LED wird mit einem Vorwiderstand R = 220 Ω betrieben. Durch sie fließt ein Strom von I = 20 mA.",
+   ask:"Berechne die Spannung U, die über dem Vorwiderstand abfällt.",
+   given:{R:'220 Ω', I:'20 mA'},
+   steps:["Einheit umrechnen: 20 mA = 0,02 A","U = R · I = 220 Ω · 0,02 A","U = 4,4 V"],
+   hint:"Wandle die Stromstärke zuerst von mA in A um."},
+  {lvl:2, solve:'U', unit:'V', answer:1.5, tol:0.02,
+   ctx:"In einem Klingelstromkreis fließt durch einen Widerstand von R = 30 Ω ein Strom von I = 50 mA.",
+   ask:"Berechne die Spannung U über dem Widerstand.",
+   given:{R:'30 Ω', I:'50 mA'},
+   steps:["Einheit umrechnen: 50 mA = 0,05 A","U = R · I = 30 Ω · 0,05 A","U = 1,5 V"],
+   hint:"50 mA = 0,05 A."},
+
+  {lvl:3, solve:'R', unit:'Ω', answer:50, tol:0.02,
+   ctx:"Ein Bügeleisen ist an die Netzspannung U = 230 V angeschlossen. Dabei fließt ein Strom von I = 4,6 A.",
+   ask:"Berechne den Widerstand R des Bügeleisens.",
+   given:{U:'230 V', I:'4,6 A'},
+   steps:["Formel umstellen: U = R · I  | : I","R = U / I = 230 V / 4,6 A","R = 50 Ω"],
+   hint:"Stelle U = R·I nach R um: R = U / I."},
+  {lvl:3, solve:'R', unit:'Ω', answer:2.5, tol:0.02,
+   ctx:"Ein USB-Ladegerät liefert U = 5 V. Beim Laden fließt ein Strom von I = 2 A.",
+   ask:"Welchen Widerstand R hat das angeschlossene Gerät?",
+   given:{U:'5 V', I:'2 A'},
+   steps:["R = U / I = 5 V / 2 A","R = 2,5 Ω"],
+   hint:"R = U / I."},
+  {lvl:3, solve:'R', unit:'Ω', answer:24, tol:0.02,
+   ctx:"Eine Autolampe wird an die Bordspannung U = 12 V angeschlossen. Durch sie fließt ein Strom von I = 0,5 A.",
+   ask:"Berechne den Widerstand R der Lampe in diesem Betriebspunkt.",
+   given:{U:'12 V', I:'0,5 A'},
+   steps:["R = U / I = 12 V / 0,5 A","R = 24 Ω"],
+   hint:"R = U / I."},
+
+  {lvl:4, solve:'I', unit:'A', answer:0.4, tol:0.02,
+   ctx:"Eine Glühlampe mit dem Widerstand R = 575 Ω wird an die Netzspannung U = 230 V angeschlossen.",
+   ask:"Berechne die Stromstärke I durch die Lampe.",
+   given:{U:'230 V', R:'575 Ω'},
+   steps:["Formel umstellen: U = R · I  | : R","I = U / R = 230 V / 575 Ω","I = 0,4 A"],
+   hint:"Stelle U = R·I nach I um: I = U / R."},
+  {lvl:4, solve:'I', unit:'mA', answer:50, tol:0.02,
+   ctx:"An einen Widerstand R = 240 Ω wird eine Spannung von U = 12 V angelegt.",
+   ask:"Berechne die Stromstärke I – gib das Ergebnis in Milliampere (mA) an.",
+   given:{U:'12 V', R:'240 Ω'},
+   steps:["I = U / R = 12 V / 240 Ω","I = 0,05 A","Umrechnen: 0,05 A = 50 mA"],
+   hint:"Erst I = U/R in Ampere rechnen, dann ·1000 für mA."},
+
+  {lvl:5, solve:'I', unit:'mA', answer:6, tol:0.02,
+   ctx:"In einer Schaltung liegt an einem Widerstand von R = 1,5 kΩ eine Spannung von U = 9 V (Blockbatterie).",
+   ask:"Berechne die Stromstärke I in Milliampere (mA).",
+   given:{U:'9 V', R:'1,5 kΩ'},
+   steps:["Einheit umrechnen: 1,5 kΩ = 1500 Ω","I = U / R = 9 V / 1500 Ω = 0,006 A","Umrechnen: 0,006 A = 6 mA"],
+   hint:"1,5 kΩ = 1500 Ω. Ergebnis dann von A in mA umrechnen."},
+  {lvl:5, solve:'R', unit:'kΩ', answer:2.2, tol:0.02,
+   ctx:"Durch einen Vorwiderstand fließt bei einer Spannung von U = 11 V ein Strom von I = 5 mA.",
+   ask:"Berechne den Widerstand R – gib das Ergebnis in Kiloohm (kΩ) an.",
+   given:{U:'11 V', I:'5 mA'},
+   steps:["Einheit umrechnen: 5 mA = 0,005 A","R = U / I = 11 V / 0,005 A = 2200 Ω","Umrechnen: 2200 Ω = 2,2 kΩ"],
+   hint:"Erst 5 mA = 0,005 A, dann R = U/I, dann Ω in kΩ."},
+  {lvl:5, solve:'U', unit:'V', answer:7.5, tol:0.02,
+   ctx:"Ein Sensor verhält sich wie ein ohmscher Widerstand von R = 3,0 kΩ. Durch ihn fließt ein Strom von I = 2,5 mA.",
+   ask:"Berechne die Spannung U über dem Sensor.",
+   given:{R:'3,0 kΩ', I:'2,5 mA'},
+   steps:["Umrechnen: 3,0 kΩ = 3000 Ω und 2,5 mA = 0,0025 A","U = R · I = 3000 Ω · 0,0025 A","U = 7,5 V"],
+   hint:"Beide Größen in Grundeinheiten: kΩ→Ω und mA→A."}
+];
+
+const colorClass={U:'vU', I:'vI', R:'vR'};
+const LEVELHEAD={1:'Stufe 1 · Spannung U direkt berechnen',2:'Stufe 2 · mit Einheitenumrechnung (mA)',
+                 3:'Stufe 3 · Formel nach R umstellen',4:'Stufe 4 · Formel nach I umstellen',
+                 5:'Stufe 5 · mehrschrittig (kΩ, mA)'};
+const LEVELNAME={1:'Einstieg',2:'Aufbau',3:'Umstellen R',4:'Umstellen I',5:'Transfer'};
+
+const container=document.getElementById("taskContainer");
+function fmtNum(n){return(''+n).replace('.',',');}
+
+let currentLvl=0, num=0;
+TASKS.forEach((t,i)=>{
+  if(t.lvl!==currentLvl){
+    currentLvl=t.lvl;
+    const h=document.createElement("div");
+    h.className="levelhead"; h.textContent=LEVELHEAD[t.lvl];
+    container.appendChild(h);
+  }
+  num++;
+  const givenStr=Object.entries(t.given).map(([k,v])=>
+    `<span class="tag"><span class="${colorClass[k]}">${k}</span> = ${v}</span>`).join(' ');
+  const card=document.createElement("div");
+  card.className="card";
+  card.innerHTML=`
+    <div class="task-head"><span class="task-num">${num}</span>
+      <span class="level">${LEVELNAME[t.lvl]}</span></div>
+    <div class="ctx">${t.ctx}</div>
+    <div class="given">${givenStr}</div>
+    <div class="ask">${t.ask}</div>
+    <div class="answer-row">
+      <span class="lhs ${colorClass[t.solve]}">${t.solve} =</span>
+      <input type="text" inputmode="decimal" data-i="${i}" aria-label="Antwort" placeholder="?">
+      <span class="unit">${t.unit}</span>
+      <button class="act" data-check="${i}">Prüfen</button>
+      <button class="act ghost" data-sol="${i}">Lösung</button>
+    </div>
+    ${t.hint?`<div class="hint">💡 ${t.hint}</div>`:''}
+    <div class="feedback" data-fb="${i}"></div>
+    <div class="solution" data-soldiv="${i}">
+      <h4>Rechenweg</h4>
+      ${t.steps.map(s=>`<div class="step">${s}</div>`).join('')}
+    </div>`;
+  container.appendChild(card);
+});
+
+function parseNum(s){if(!s)return NaN;return parseFloat(s.replace(/\s/g,'').replace(',','.'));}
+
+function check(i){
+  const t=TASKS[i];
+  const inp=document.querySelector(`input[data-i="${i}"]`);
+  const fb=document.querySelector(`[data-fb="${i}"]`);
+  const val=parseNum(inp.value);
+  inp.classList.remove('correct','incorrect');
+  if(isNaN(val)){fb.className='feedback show mid';fb.textContent='Bitte gib eine Zahl ein.';return;}
+  const ok=Math.abs(val-t.answer)<=Math.max(Math.abs(t.answer)*t.tol,1e-9);
+  if(ok){
+    fb.className='feedback show good';fb.textContent='✓ Richtig! Super gelöst.';
+    inp.classList.add('correct');
+  }else{
+    fb.className='feedback show mid';
+    fb.textContent='✗ Noch nicht richtig. Tipp: Einheiten umrechnen und die Formel prüfen.';
+    inp.classList.add('incorrect');
+  }
+}
+
+container.addEventListener("click",e=>{
+  if(e.target.dataset.check!==undefined)check(+e.target.dataset.check);
+  if(e.target.dataset.sol!==undefined){
+    const d=document.querySelector(`[data-soldiv="${e.target.dataset.sol}"]`);
+    const open=d.classList.toggle("show");
+    e.target.textContent=open?"Lösung verbergen":"Lösung";
+  }
+});
+container.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.dataset.i!==undefined)check(+e.target.dataset.i);
+});
+
+/* ---------- Kennlinie-Regler ---------- */
+const slider=document.getElementById("kSlider");
+const kLine=document.getElementById("kLine");
+const kDot=document.getElementById("kDot");
+const kVal=document.getElementById("kVal");
+const kInfo=document.getElementById("kInfo");
+function drawKennlinie(R){
+  let endI=4, endU=R*endI;
+  if(endU>8){endU=8;endI=endU/R;}
+  kLine.setAttribute('x2',50+endI*58);kLine.setAttribute('y2',240-endU*22);
+  let dI=2,dU=R*dI;
+  if(dU>8){dU=8;dI=dU/R;}
+  kDot.setAttribute('cx',50+dI*58);kDot.setAttribute('cy',240-dU*22);
+  kVal.textContent=fmtNum(R)+' Ω';
+  kInfo.innerHTML=`Beispielpunkt: bei I = ${fmtNum(dI)} A liegt U = ${fmtNum(+dU.toFixed(2))} V an → R = U/I = ${fmtNum(R)} Ω.`;
+}
+slider.addEventListener("input",()=>drawKennlinie(parseFloat(slider.value)));
+slider.value="2";
+drawKennlinie(2);
+</script>
+<!-- rechtliches --><style>.erik-recht{font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;text-align:center;padding:18px 12px 22px;opacity:.75}.erik-recht a{color:inherit}@media print{.erik-recht{display:none}}</style><footer class="erik-recht"><a href="https://erikdahlmann.github.io/impressum.html">Impressum</a> · <a href="https://erikdahlmann.github.io/datenschutz.html">Datenschutz</a></footer><!-- /rechtliches --></body>
+</html>
