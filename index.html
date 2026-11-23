@@ -186,10 +186,10 @@
       </div>
 
       <p style="margin-top:18px">Der deutsche Physiker <strong>Georg Simon Ohm</strong> (1789–1854) fand heraus: Bei vielen
-         Leitern – besonders Metallen bei gleichbleibender Temperatur – ist die Spannung <span class="vU">U</span>
+         Leitern (besonders Metallen bei gleichbleibender Temperatur) ist die Spannung <span class="vU">U</span>
          über dem Leiter <strong>proportional</strong> zur Stromstärke <span class="vI">I</span>. Verdoppelt man die
          Spannung, verdoppelt sich auch der Strom. Der Quotient <span class="vU">U</span>/<span class="vI">I</span>
-         bleibt dabei konstant – diesen Wert nennt man den <span class="vR">elektrischen Widerstand R</span>.</p>
+         bleibt dabei konstant. Diesen Wert nennt man den <span class="vR">elektrischen Widerstand R</span>.</p>
 
       <div class="formula"><span class="vU">U</span> = <span class="vR">R</span> · <span class="vI">I</span></div>
 
@@ -230,9 +230,9 @@
         </figure>
       </div>
 
-      <div class="warnbox"><strong>Achtung – nicht jeder Leiter ist „ohmsch":</strong> Eine Glühlampe wird bei mehr
+      <div class="warnbox"><strong>Achtung: Nicht jeder Leiter ist „ohmsch":</strong> Eine Glühlampe wird bei mehr
          Strom heißer, dadurch ändert sich ihr Widerstand. Bei ihr ist <span class="vU">U</span>/<span class="vI">I</span>
-         <u>nicht</u> konstant – sie folgt dem Ohmschen Gesetz nicht. „Ohmsche Widerstände" sind z.&nbsp;B.
+         <u>nicht</u> konstant. Sie folgt dem Ohmschen Gesetz nicht. „Ohmsche Widerstände" sind z.&nbsp;B.
          Konstantandrähte oder technische Widerstände bei konstanter Temperatur.</div>
     </div>
   </div>
@@ -245,7 +245,7 @@
     <div class="card">
       <h2>Das U-I-R-Dreieck</h2>
       <p>Je nachdem, welche Größe gesucht ist, stellt man <span class="vU">U</span> = <span class="vR">R</span> · <span class="vI">I</span>
-         um. Das Formeldreieck hilft: Decke die gesuchte Größe ab – was übrig bleibt, ist die Rechnung.</p>
+         um. Das Formeldreieck hilft: Decke die gesuchte Größe ab. Was übrig bleibt, ist die Rechnung.</p>
       <div class="two">
         <figure style="margin:0">
           <svg class="diagram" viewBox="0 0 300 230" role="img" aria-label="Formeldreieck U R I" style="max-width:280px;margin:0 auto">
@@ -264,7 +264,7 @@
           <div class="formula" style="font-size:1.35rem"><span class="vI">I</span> = <span class="vU">U</span> / <span class="vR">R</span></div>
         </div>
       </div>
-      <div class="hint">💡 <strong>Einheiten umrechnen – oft nötig!</strong><br>
+      <div class="hint"><strong>Einheiten umrechnen ist oft nötig.</strong><br>
         1&nbsp;mA = 0,001&nbsp;A · 1&nbsp;A = 1000&nbsp;mA &nbsp;|&nbsp; 1&nbsp;kΩ = 1000&nbsp;Ω &nbsp;|&nbsp; 1&nbsp;kV = 1000&nbsp;V.<br>
         Vor dem Einsetzen immer in die Grundeinheiten V, A und Ω umrechnen!</div>
     </div>
@@ -319,7 +319,7 @@
 <section id="uebungen">
   <div class="wrap">
     <span class="section-tag">4 · Übungen</span>
-    <p class="lead" style="font-size:1rem;color:var(--muted)">Die Aufgaben werden Schritt für Schritt schwerer – von
+    <p class="lead" style="font-size:1rem;color:var(--muted)">Die Aufgaben werden Schritt für Schritt schwerer: von
        der einfachen Spannungsberechnung bis zum Umstellen der Formel mit Einheitenumrechnung. Gib dein Ergebnis ein
        und klicke auf <strong>Prüfen</strong>; mit <strong>Lösung</strong> siehst du den Rechenweg.</p>
     <div id="taskContainer"></div>
@@ -328,7 +328,7 @@
 
 <footer>
   <div class="wrap">
-    Physik · Klasse 9 · Lerneinheit „Ohmsches Gesetz" · Alle Eingaben bleiben lokal in deinem Browser — es wird nichts gespeichert oder gesendet.
+    Physik · Klasse 9 · Lerneinheit „Ohmsches Gesetz" · Alle Eingaben bleiben lokal in deinem Browser. Es wird nichts gespeichert oder gesendet.
   </div>
 </footer>
 
@@ -395,7 +395,7 @@ const TASKS = [
    hint:"Stelle U = R·I nach I um: I = U / R."},
   {lvl:4, solve:'I', unit:'mA', answer:50, tol:0.02,
    ctx:"An einen Widerstand R = 240 Ω wird eine Spannung von U = 12 V angelegt.",
-   ask:"Berechne die Stromstärke I – gib das Ergebnis in Milliampere (mA) an.",
+   ask:"Berechne die Stromstärke I. Gib das Ergebnis in Milliampere (mA) an.",
    given:{U:'12 V', R:'240 Ω'},
    steps:["I = U / R = 12 V / 240 Ω","I = 0,05 A","Umrechnen: 0,05 A = 50 mA"],
    hint:"Erst I = U/R in Ampere rechnen, dann ·1000 für mA."},
@@ -408,7 +408,7 @@ const TASKS = [
    hint:"1,5 kΩ = 1500 Ω. Ergebnis dann von A in mA umrechnen."},
   {lvl:5, solve:'R', unit:'kΩ', answer:2.2, tol:0.02,
    ctx:"Durch einen Vorwiderstand fließt bei einer Spannung von U = 11 V ein Strom von I = 5 mA.",
-   ask:"Berechne den Widerstand R – gib das Ergebnis in Kiloohm (kΩ) an.",
+   ask:"Berechne den Widerstand R. Gib das Ergebnis in Kiloohm (kΩ) an.",
    given:{U:'11 V', I:'5 mA'},
    steps:["Einheit umrechnen: 5 mA = 0,005 A","R = U / I = 11 V / 0,005 A = 2200 Ω","Umrechnen: 2200 Ω = 2,2 kΩ"],
    hint:"Erst 5 mA = 0,005 A, dann R = U/I, dann Ω in kΩ."},
@@ -455,7 +455,7 @@ TASKS.forEach((t,i)=>{
       <button class="act" data-check="${i}">Prüfen</button>
       <button class="act ghost" data-sol="${i}">Lösung</button>
     </div>
-    ${t.hint?`<div class="hint">💡 ${t.hint}</div>`:''}
+    ${t.hint?`<div class="hint">Tipp: ${t.hint}</div>`:''}
     <div class="feedback" data-fb="${i}"></div>
     <div class="solution" data-soldiv="${i}">
       <h4>Rechenweg</h4>
@@ -475,7 +475,7 @@ function check(i){
   if(isNaN(val)){fb.className='feedback show mid';fb.textContent='Bitte gib eine Zahl ein.';return;}
   const ok=Math.abs(val-t.answer)<=Math.max(Math.abs(t.answer)*t.tol,1e-9);
   if(ok){
-    fb.className='feedback show good';fb.textContent='✓ Richtig! Super gelöst.';
+    fb.className='feedback show good';fb.textContent='✓ Richtig.';
     inp.classList.add('correct');
   }else{
     fb.className='feedback show mid';
